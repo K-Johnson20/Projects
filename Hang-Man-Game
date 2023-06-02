@@ -1,0 +1,73 @@
+import random
+
+# List of words to choose from
+words = ['python', 'java', 'javascript', 'ruby', 'csharp', 'swift', 'go', 'kotlin', 'php']
+
+# Function to select a random word from the list
+def select_word():
+    return random.choice(words)
+
+# Function to initialize the game state
+def initialize_game():
+    word = select_word()
+    guessed_letters = []
+    incorrect_guesses = []
+    return word, guessed_letters, incorrect_guesses
+
+# Function to display the current state of the word
+def display_word(word, guessed_letters):
+    display = ''
+    for letter in word:
+        if letter in guessed_letters:
+            display += letter + ' '
+        else:
+            display += '_ '
+    return display
+
+# Function to check if the player has won
+def check_win(word, guessed_letters):
+    for letter in word:
+        if letter not in guessed_letters:
+            return False
+    return True
+
+# Function to play the game
+def play_game():
+    word, guessed_letters, incorrect_guesses = initialize_game()
+    attempts_left = 6
+
+    while True:
+        print("\nAttempts Left:", attempts_left)
+        print("Incorrect Guesses:", incorrect_guesses)
+        print("Current Word:", display_word(word, guessed_letters))
+
+        # Get the player's guess
+        guess = input("Enter a letter: ").lower()
+
+        # Check if the guess is valid
+        if len(guess) != 1 or not guess.isalpha():
+            print("Invalid input. Please enter a single letter.")
+            continue
+
+        # Check if the letter has already been guessed
+        if guess in guessed_letters or guess in incorrect_guesses:
+            print("You have already guessed that letter.")
+            continue
+
+        # Check if the letter is in the word
+        if guess in word:
+            guessed_letters.append(guess)
+            if check_win(word, guessed_letters):
+                print("\nCongratulations! You guessed the word:", word)
+                break
+        else:
+            incorrect_guesses.append(guess)
+            attempts_left -= 1
+            print("Incorrect guess.")
+
+            if attempts_left == 0:
+                print("\nYou lost! The word was:", word)
+                break
+
+# Start the game
+play_game()
